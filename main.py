@@ -1,14 +1,17 @@
-import pandas as pd
-import numpy as np
 
 def main():
+    import sys
+    flags = {
+        "verbose": True if "-v" in sys.argv else False
+    }
 
     # ----------------------------- #
     #        Data importing         #
     # ----------------------------- #
 
+    import pandas as pd
     from loader import Loader
-    loader = Loader()
+    loader = Loader(flags)
 
     loader.read_csv("artists", "./artists-data.csv", ["Artist", "Link"])
     loader.read_csv("lyrics", "./lyrics-data.csv.zip", [ "ALink", "Lyric"])
@@ -25,7 +28,6 @@ def main():
     #       Lyrics processing       #
     # ----------------------------- #
 
-
     nan_value = float("NaN")
     df.drop_duplicates(inplace=True)
     df.replace("", nan_value, inplace=True)
@@ -33,7 +35,7 @@ def main():
 #
 #
     from normalizer import Normalizer
-    normalizer = Normalizer()
+    normalizer = Normalizer(flags)
 
     normalizer.lowercase(df)
     normalizer.remove_inbrackets_text(df)
