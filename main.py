@@ -16,8 +16,8 @@ def main():
     loader.read_csv("artists", "./artists-data.csv", ["Artist", "Link"])
     loader.read_csv("lyrics", "./lyrics-data.csv.zip", [ "ALink", "Lyric"])
     loader.rename_cols("lyrics", {"ALink": "Link"})
-
-    df = loader.merge_and_return("artists", "lyrics", on_col=["Link"])
+    loader.merge("artists", "lyrics", on_col=["Link"])
+    df = loader.get_df("artists_lyrics")
 
 
     df['Lyric'] = pd.Series(df['Lyric'], dtype="string")
@@ -27,23 +27,25 @@ def main():
     # ----------------------------- #
     #       Lyrics processing       #
     # ----------------------------- #
-
-    nan_value = float("NaN")
-    df.drop_duplicates(inplace=True)
-    df.replace("", nan_value, inplace=True)
-    df.dropna(inplace=True)
 #
 #
     from normalizer import Normalizer
     normalizer = Normalizer(flags)
 
+    normalizer.drop_duplicates(df)
+    normalizer.drop_nans(df)
     normalizer.lowercase(df)
     normalizer.remove_inbrackets_text(df)
-    normalizer.remove_written_by(df)
+    normalizer.drop_written_by(df)
     normalizer.remove_punctuations(df)
     normalizer.remove_phrases_with_numbers(df)
-    normalizer.remove_empty_records(df)
+    normalizer.drop_empty_records(df)
 
+    print("- Saving checkpont 1")
+    df.to_csv("./checkpoint1.csv")
+
+
+    # df = pd.read_csv("./checkpoint1.csv")
 
 
 
@@ -58,11 +60,6 @@ def main():
 #
 #     df['stopwords'] = df["Lyric"].apply(lambda x: len([x for x in x.split() if x in stop]))
 #     print(df[['Lyric','stopwords']].head())
-
-
-
-    # print(df.loc[84530:84540, :])
-    # df["Lyric"].to_csv("./test.csv")
 
 
 

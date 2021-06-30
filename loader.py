@@ -19,16 +19,17 @@ class Loader:
         self.fields[field_name].rename(columns=cols, inplace=True)
 
 
-    def merge_and_return(self, field_name1, field_name2, on_col):
-        df = pd.merge(self.fields[field_name1],  self.fields[field_name2], on=on_col, how="inner")
+    def merge(self, field_name1, field_name2, on_col):
         if(self.verbose):
             print(f"- Merging {field_name1} with {field_name2}.")
 
+        df = pd.merge(self.fields[field_name1],  self.fields[field_name2], on=on_col, how="inner")
         df.drop(columns=on_col, inplace=True)
+        self.fields[f"{field_name1}_{field_name2}"] = df
 
-        return df
 
-
+    def get_df(self, field_name):
+        return self.fields[field_name]
 
 
 

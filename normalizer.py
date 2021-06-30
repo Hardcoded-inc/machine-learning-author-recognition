@@ -22,16 +22,6 @@ class Normalizer:
         df = df[~df["Lyric"].str.contains("\[|\]|\(|\)|\{|\}")]
 
 
-
-    def remove_written_by(self, df):
-        if(self.verbose):
-            print(f"- Removing 'written by' rows.")
-
-        # Remove written by
-        df = df[~df["Lyric"].str.contains("written by")]
-        # df["Lyric"] = df["Lyric"].str.replace(r'written by.*(?=\.\.)\.\.', '')
-
-
     def remove_punctuations(self, df):
         if(self.verbose):
             print(f"- Removing punctuation.")
@@ -47,9 +37,33 @@ class Normalizer:
 
 
 
-    def remove_empty_records(self, df):
+    def drop_empty_records(self, df):
         if(self.verbose):
-            print(f"- Removing empty records.")
+            print(f"- Dropping empty records.")
 
         df = df[df["Lyric"].str.contains("[a-zA-Z]")]
 
+
+    def drop_duplicates(self, df):
+        if(self.verbose):
+            print(f"- Dropping duploicated.")
+
+        df.drop_duplicates(inplace=True)
+
+
+    def drop_nans(self, df):
+        if(self.verbose):
+            print(f"- Dropping NaNs.")
+
+        nan_value = float("NaN")
+        df.replace("", nan_value, inplace=True)
+        df.dropna(inplace=True)
+
+
+    def drop_written_by(self, df):
+        if(self.verbose):
+            print(f"- Dropping 'written by' rows.")
+
+        # Remove written by
+        df = df[~df["Lyric"].str.contains("written by")]
+        # df["Lyric"] = df["Lyric"].str.replace(r'written by.*(?=\.\.)\.\.', '')
