@@ -15,7 +15,7 @@ def main():
     loader = Loader(flags)
     loader.read_csv("dataset.zip", cols=["artist", "song", "seq"])
     loader.convert_cols_to_dtype(["artist", "song", "seq"], "string")
-    df = loader.get_df().iloc[:1000,:].copy()
+    df = loader.get_df().iloc[:10000,:].copy()
 
     # ----------------------------- #
     #       Lyrics processing       #
@@ -33,27 +33,14 @@ def main():
     normalizer.remove_punctuations(df)
     normalizer.remove_phrases_with_numbers(df)
     normalizer.drop_empty_records(df)
-
-    print("- Saving checkpont 1")
-    df.to_csv("./checkpoint1.csv")
-
-
-
-    # loader.read_csv("checkpoint1.csv", cols=["artist", "song", "seq"])
-    # loader.convert_cols_to_dtype(["artist", "song", "seq"], "string")
-    # df = loader.get_df()
-
     normalizer.remove_stop_words(df)
     normalizer.remove_common_words(df)
     normalizer.remove_rare_words(df)
     normalizer.tokenize(df)
 
 
-
-    print("- Saving checkpont 2")
-    df.to_csv("./checkpoint2.csv")
-
-
+    print("- Saving processed data")
+    df.to_csv("./checkpoint3.csv")
 
 
 if __name__ == "__main__":
