@@ -1,3 +1,8 @@
+import nltk
+from nltk.corpus import stopwords
+
+
+
 class Normalizer:
     def __init__(self, flags):
         self.verbose = flags["verbose"]
@@ -66,3 +71,11 @@ class Normalizer:
         # Remove written by
         df = df[~df[col].str.contains("written by")]
         # df[col] = df[col].str.replace(r'written by.*(?=\.\.)\.\.', '')
+
+
+    def remove_stop_words(self, df, col="seq"):
+        nltk.download('stopwords')
+        stop = stopwords.words('english')
+
+        self.drop_nans(df)
+        df[col] = df[col].apply(lambda x: [x for x in x.split() if x not in stop])

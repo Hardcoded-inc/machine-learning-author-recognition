@@ -1,6 +1,8 @@
+import pandas as pd
+import numpy as np
+import sys
 
 def main():
-    import sys
     flags = {
         "verbose": True if "-v" in sys.argv else False
     }
@@ -8,16 +10,17 @@ def main():
     # ----------------------------- #
     #        Data importing         #
     # ----------------------------- #
+    from loader import Loader
 
-    import pandas as pd
-
-    df = pd.read_csv("dataset.zip", usecols=["artist", "song", "seq"])
-
+    loader = Loader(flags)
+    loader.read_csv("dataset.zip", cols=["artist", "song", "seq"])
+    loader.convert_cols_to_dtype(["artist", "song", "seq"], "string")
+    df = loader.get_df()
 
     # ----------------------------- #
     #       Lyrics processing       #
     # ----------------------------- #
-#
+
 #
     from normalizer import Normalizer
     normalizer = Normalizer(flags)
@@ -30,30 +33,20 @@ def main():
     normalizer.remove_punctuations(df)
     normalizer.remove_phrases_with_numbers(df)
     normalizer.drop_empty_records(df)
-
-    print("- Saving checkpont 1")
-    df.to_csv("./checkpoint1.csv")
-
-
-    # df = pd.read_csv("./checkpoint1.csv")
-
-
-
-#     # stopwords
-#     # ---------
-#     import nltk
-#     from nltk.corpus import stopwords
 #
-#     nltk.download('stopwords')
-#     stop = stopwords.words('english')
+#     print("- Saving checkpont 1")
+#     df.to_csv("./checkpoint1.csv")
 #
 #
-#     df['stopwords'] = df["Lyric"].apply(lambda x: len([x for x in x.split() if x in stop]))
-#     print(df[['Lyric','stopwords']].head())
+#     loader.read_csv("checkpoint1.csv", cols=["artist", "song", "seq"])
+#     loader.convert_cols_to_dtype(["artist", "song", "seq"], "string")
+#     df = loader.get_df()
 
+    normalizer.remove_stop_words(df)
 
-
-
+#
+#     print("- Saving checkpont 2")
+#     df.to_csv("./checkpoint2.csv")
 
 
 
