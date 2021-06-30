@@ -41,7 +41,7 @@ def main():
 
 
     print("- Saving processed data")
-    df.to_csv("./checkpoint3.csv")
+    df.to_csv("./checkpoint4.csv")
 
 
 if __name__ == "__main__":
