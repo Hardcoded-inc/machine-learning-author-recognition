@@ -10,18 +10,8 @@ def main():
     # ----------------------------- #
 
     import pandas as pd
-    from loader import Loader
-    loader = Loader(flags)
 
-    loader.read_csv("artists", "./artists-data.csv", ["Artist", "Link"])
-    loader.read_csv("lyrics", "./lyrics-data.csv.zip", [ "ALink", "Lyric"])
-    loader.rename_cols("lyrics", {"ALink": "Link"})
-    loader.merge("artists", "lyrics", on_col=["Link"])
-    df = loader.get_df("artists_lyrics")
-
-
-    df['Lyric'] = pd.Series(df['Lyric'], dtype="string")
-    df['Artist'] = pd.Series(df['Artist'], dtype="string")
+    df = pd.read_csv("dataset.zip", usecols=["artist", "song", "seq"])
 
 
     # ----------------------------- #
@@ -32,8 +22,8 @@ def main():
     from normalizer import Normalizer
     normalizer = Normalizer(flags)
 
-    normalizer.drop_duplicates(df)
-    normalizer.drop_nans(df)
+    # normalizer.drop_duplicates(df)
+    # normalizer.drop_nans(df)
     normalizer.lowercase(df)
     normalizer.remove_inbrackets_text(df)
     normalizer.drop_written_by(df)
