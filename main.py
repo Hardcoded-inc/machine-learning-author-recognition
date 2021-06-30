@@ -1,11 +1,12 @@
 import pandas as pd
 import numpy as np
+from zipfile import zipfile
 
 def main():
 
     # Data importing
     artists_df = pd.read_csv("./artists-data.csv", usecols=["Artist", "Link"])
-    songs_df = pd.read_csv("./lyrics-data.csv", usecols=[ "ALink", "Lyric"])
+    songs_df = pd.read_csv("./lyrics-data.csv.zip", usecols=[ "ALink", "Lyric"])
     songs_df.rename(columns={"ALink": "Link"}, inplace=True)
 
     # Merge artists with songs lyrics
@@ -47,6 +48,7 @@ def main():
 
 
     # Remove written by
+    df = df[~df["Lyric"].str.contains("written by")]
     # df["Lyric"] = df["Lyric"].str.replace(r'written by.*(?=\.\.)\.\.', '')
 
     # Remove punctuations
