@@ -1,5 +1,6 @@
 import pandas as pd
-from textblob import TextBlob
+from textblob import TextBlob, Word
+import nltk
 
 class Normalizer:
     def __init__(self, flags):
@@ -95,3 +96,9 @@ class Normalizer:
             print(f"- Tokenizing lyrics.")
 
         df[col] = df[col].apply(lambda x: str(TextBlob(x).words))
+
+    def lemmatize(self, df, col="seq"):
+        if self.verbose :
+            print(f"- Lemmatizing lyrics.")
+        nltk.download('wordnet')
+        df[col] = df[col].apply(lambda x: [].append([Word(word).lemmatize() for word in x]))

@@ -4,42 +4,43 @@ def main():
     flags = {
         "verbose": True if "-v" in sys.argv else False
     }
-
-    # ----------------------------- #
-    #        Data importing         #
-    # ----------------------------- #
-
+#
+#     # ----------------------------- #
+#     #        Data importing         #
+#     # ----------------------------- #
+#
     import pandas as pd
-
-    df = pd.read_csv("dataset.zip", usecols=["artist", "song", "seq"])
-
-
-    # ----------------------------- #
-    #       Lyrics processing       #
-    # ----------------------------- #
+#
+#     df = pd.read_csv("dataset.zip", usecols=["artist", "song", "seq"])
 #
 #
+#     # ----------------------------- #
+#     #       Lyrics processing       #
+#     # ----------------------------- #
+# #
+# #
     from normalizer import Normalizer
     normalizer = Normalizer(flags)
-
-    # normalizer.drop_duplicates(df)
-    # normalizer.drop_nans(df)
-    normalizer.lowercase(df)
-    normalizer.remove_inbrackets_text(df)
-    normalizer.drop_written_by(df)
-    normalizer.remove_punctuations(df)
-    normalizer.remove_phrases_with_numbers(df)
-    normalizer.drop_empty_records(df)
-    normalizer.remove_common_words(df)
-    normalizer.remove_rare_words(df)
-    normalizer.tokenize(df)
-    print("- Saving checkpont 1")
-    df.to_csv("./checkpoint1.csv")
-
-
-    # df = pd.read_csv("./checkpoint1.csv")
+#
+#     # normalizer.drop_duplicates(df)
+#     # normalizer.drop_nans(df)
+#     normalizer.lowercase(df)
+#     normalizer.remove_inbrackets_text(df)
+#     normalizer.drop_written_by(df)
+#     normalizer.remove_punctuations(df)
+#     normalizer.remove_phrases_with_numbers(df)
+#     normalizer.drop_empty_records(df)
+#     normalizer.remove_common_words(df)
+#     normalizer.remove_rare_words(df)
+#     normalizer.tokenize(df)
+#     print("- Saving checkpont 1")
+#     df.to_csv("./checkpoint1.csv")
 
 
+    df = pd.read_csv("./checkpoint1.csv")
+    normalizer.lemmatize(df)
+
+    df.to_csv("./checkpoint2.csv")
 
 #     # stopwords
 #     # ---------
