@@ -1,3 +1,6 @@
+import pandas as pd
+from textblob import TextBlob
+
 class Normalizer:
     def __init__(self, flags):
         self.verbose = flags["verbose"]
@@ -66,3 +69,29 @@ class Normalizer:
         # Remove written by
         df = df[~df[col].str.contains("written by")]
         # df[col] = df[col].str.replace(r'written by.*(?=\.\.)\.\.', '')
+
+    def remove_common_words(self, df, col="seq"):
+        if self.verbose :
+            print(f"- Dropping common words.")
+
+        freq = pd.Series(' '.join(df[col]).split()).value_counts()
+        freq = freq[freq > 6000]
+
+        freq = list(freq.index)
+        df[col] = df[col].apply(lambda x: " ".join(x for x in x.split() if x not in freq))
+
+    def remove_rare_words(self, df, col="seq"):
+        if self.verbose :
+            print(f"- Dropping rare words.")
+
+        freq = pd.Series(' '.join(df[col]).split()).value_counts()
+        freq = freq[freq < 5]
+
+        freq = list(freq.index)
+        df[col] = df[col].apply(lambda x: " ".join(x for x in x.split() if x not in freq))
+
+    def tokenize(self, df, col="seq"):
+        if self.verbose :
+            print(f"- Tokenizing lyrics.")
+
+        df[col] = df[col].apply(lambda x: str(TextBlob(x).words))
