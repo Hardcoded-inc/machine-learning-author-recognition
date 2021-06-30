@@ -15,7 +15,7 @@ def main():
     loader = Loader(flags)
     loader.read_csv("dataset.zip", cols=["artist", "song", "seq"])
     loader.convert_cols_to_dtype(["artist", "song", "seq"], "string")
-    df = loader.get_df()
+    df = loader.get_df().iloc[:1000,:].copy()
 
     # ----------------------------- #
     #       Lyrics processing       #
@@ -24,7 +24,7 @@ def main():
 #
     from normalizer import Normalizer
     normalizer = Normalizer(flags)
-
+#
     # normalizer.drop_duplicates(df)
     # normalizer.drop_nans(df)
     normalizer.lowercase(df)
@@ -34,8 +34,8 @@ def main():
     normalizer.remove_phrases_with_numbers(df)
     normalizer.drop_empty_records(df)
 
-    # print("- Saving checkpont 1")
-    # df.to_csv("./checkpoint1.csv")
+    print("- Saving checkpont 1")
+    df.to_csv("./checkpoint1.csv")
 
 
 
@@ -49,9 +49,9 @@ def main():
     normalizer.tokenize(df)
 
 
-#
-#     print("- Saving checkpont 2")
-#     df.to_csv("./checkpoint2.csv")
+
+    print("- Saving checkpont 2")
+    df.to_csv("./checkpoint2.csv")
 
 
 

@@ -3,6 +3,10 @@ from nltk.corpus import stopwords
 import pandas as pd
 from textblob import TextBlob
 
+nltk.download('stopwords')
+stop = stopwords.words('english')
+
+
 class Normalizer:
     def __init__(self, flags):
         self.verbose = flags["verbose"]
@@ -74,14 +78,11 @@ class Normalizer:
 
 
     def remove_stop_words(self, df, col="seq"):
+        self.drop_nans(df)
         if self.verbose :
             print(f"- Removing stopwords.")
 
-        nltk.download('stopwords')
-        stop = stopwords.words('english')
-
-        self.drop_nans(df)
-        df[col] = df[col].apply(lambda x: [x for x in x.split() if x not in stop])
+        df[col] = df[col].apply(lambda x: " ".join(x for x in x.split() if x not in stop))
 
 
     def remove_common_words(self, df, col="seq"):
@@ -100,7 +101,7 @@ class Normalizer:
             print(f"- Removing rare words.")
 
         freq = pd.Series(' '.join(df[col]).split()).value_counts()
-        freq = freq[freq < 5]
+        freq = freq[freq < 3]
 
         freq = list(freq.index)
         df[col] = df[col].apply(lambda x: " ".join(x for x in x.split() if x not in freq))
