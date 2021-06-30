@@ -2,6 +2,7 @@ import nltk
 from nltk.corpus import stopwords
 import pandas as pd
 from textblob import TextBlob
+from nltk.stem import PorterStemmer
 
 nltk.download('stopwords')
 stop = stopwords.words('english')
@@ -112,3 +113,10 @@ class Normalizer:
             print(f"- Tokenizing lyrics.")
 
         df[col] = df[col].apply(lambda x: str(TextBlob(x).words))
+
+    def stem(self, df, col="seq"):
+        if self.verbose :
+            print(f"- Stemming lyrics.")
+
+        st = PorterStemmer()
+        df[col] = df[col].apply(lambda x: " ".join(st.stem(word) for word in x.split()))

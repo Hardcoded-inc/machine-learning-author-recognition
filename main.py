@@ -36,6 +36,7 @@ def main():
     normalizer.remove_stop_words(df)
     normalizer.remove_common_words(df)
     normalizer.remove_rare_words(df)
+    normalizer.stem(df)
     normalizer.tokenize(df)
 
 
