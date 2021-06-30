@@ -8,7 +8,7 @@ stop = stopwords.words('english')
 
 
 class Normalizer:
-    def __init__(self, flags):
+    def __init__(self, flags={"verbose": False}):
         self.verbose = flags["verbose"]
 
     def lowercase(self, df, col="seq"):

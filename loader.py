@@ -1,7 +1,7 @@
 import pandas as pd
 
 class Loader:
-    def __init__(self, flags):
+    def __init__(self, flags={"verbose": False}):
         self.fields = {}
         self.verbose = flags["verbose"]
 
