@@ -1,5 +1,11 @@
+import nltk
+from nltk.corpus import stopwords
 import pandas as pd
 from textblob import TextBlob
+
+nltk.download('stopwords')
+stop = stopwords.words('english')
+
 
 class Normalizer:
     def __init__(self, flags):
@@ -70,9 +76,18 @@ class Normalizer:
         df = df[~df[col].str.contains("written by")]
         # df[col] = df[col].str.replace(r'written by.*(?=\.\.)\.\.', '')
 
+
+    def remove_stop_words(self, df, col="seq"):
+        self.drop_nans(df)
+        if self.verbose :
+            print(f"- Removing stopwords.")
+
+        df[col] = df[col].apply(lambda x: " ".join(x for x in x.split() if x not in stop))
+
+
     def remove_common_words(self, df, col="seq"):
         if self.verbose :
-            print(f"- Dropping common words.")
+            print(f"- Removing common words.")
 
         freq = pd.Series(' '.join(df[col]).split()).value_counts()
         freq = freq[freq > 6000]
@@ -80,15 +95,17 @@ class Normalizer:
         freq = list(freq.index)
         df[col] = df[col].apply(lambda x: " ".join(x for x in x.split() if x not in freq))
 
+
     def remove_rare_words(self, df, col="seq"):
         if self.verbose :
-            print(f"- Dropping rare words.")
+            print(f"- Removing rare words.")
 
         freq = pd.Series(' '.join(df[col]).split()).value_counts()
-        freq = freq[freq < 5]
+        freq = freq[freq < 3]
 
         freq = list(freq.index)
         df[col] = df[col].apply(lambda x: " ".join(x for x in x.split() if x not in freq))
+
 
     def tokenize(self, df, col="seq"):
         if self.verbose :
