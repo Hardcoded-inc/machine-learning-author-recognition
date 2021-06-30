@@ -1,7 +1,7 @@
 import nltk
 from nltk.corpus import stopwords
-
-
+import pandas as pd
+from textblob import TextBlob
 
 class Normalizer:
     def __init__(self, flags):
@@ -74,8 +74,40 @@ class Normalizer:
 
 
     def remove_stop_words(self, df, col="seq"):
+        if self.verbose :
+            print(f"- Removing stopwords.")
+
         nltk.download('stopwords')
         stop = stopwords.words('english')
 
         self.drop_nans(df)
         df[col] = df[col].apply(lambda x: [x for x in x.split() if x not in stop])
+
+
+    def remove_common_words(self, df, col="seq"):
+        if self.verbose :
+            print(f"- Removing common words.")
+
+        freq = pd.Series(' '.join(df[col]).split()).value_counts()
+        freq = freq[freq > 6000]
+
+        freq = list(freq.index)
+        df[col] = df[col].apply(lambda x: " ".join(x for x in x.split() if x not in freq))
+
+
+    def remove_rare_words(self, df, col="seq"):
+        if self.verbose :
+            print(f"- Removing rare words.")
+
+        freq = pd.Series(' '.join(df[col]).split()).value_counts()
+        freq = freq[freq < 5]
+
+        freq = list(freq.index)
+        df[col] = df[col].apply(lambda x: " ".join(x for x in x.split() if x not in freq))
+
+
+    def tokenize(self, df, col="seq"):
+        if self.verbose :
+            print(f"- Tokenizing lyrics.")
+
+        df[col] = df[col].apply(lambda x: str(TextBlob(x).words))
