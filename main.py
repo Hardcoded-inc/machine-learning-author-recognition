@@ -1,21 +1,24 @@
 import pandas as pd
 import numpy as np
-from zipfile import zipfile
 
 def main():
 
-    # Data importing
-    artists_df = pd.read_csv("./artists-data.csv", usecols=["Artist", "Link"])
-    songs_df = pd.read_csv("./lyrics-data.csv.zip", usecols=[ "ALink", "Lyric"])
-    songs_df.rename(columns={"ALink": "Link"}, inplace=True)
+    # ----------------------------- #
+    #        Data importing         #
+    # ----------------------------- #
 
-    # Merge artists with songs lyrics
-    df = pd.merge(songs_df, artists_df, on =["Link"], how="inner")
-    df.drop(columns=["Link"], inplace=True)
+    from loader import Loader
+    loader = Loader()
+
+    loader.read_csv("artists", "./artists-data.csv", ["Artist", "Link"])
+    loader.read_csv("lyrics", "./lyrics-data.csv.zip", [ "ALink", "Lyric"])
+    loader.rename_cols("lyrics", {"ALink": "Link"})
+
+    df = loader.merge_and_return("artists", "lyrics", on_col=["Link"])
+
 
     df['Lyric'] = pd.Series(df['Lyric'], dtype="string")
     df['Artist'] = pd.Series(df['Artist'], dtype="string")
-
 
 
     # ----------------------------- #
@@ -27,40 +30,32 @@ def main():
     df.drop_duplicates(inplace=True)
     df.replace("", nan_value, inplace=True)
     df.dropna(inplace=True)
+#
+#
+    from normalizer import Normalizer
+    normalizer = Normalizer()
+
+    normalizer.lowercase(df)
+    normalizer.remove_inbrackets_text(df)
+    normalizer.remove_written_by(df)
+    normalizer.remove_punctuations(df)
+    normalizer.remove_phrases_with_numbers(df)
+    normalizer.remove_empty_records(df)
 
 
-    # lowercase
-    # ---------
-    df["Lyric"] = df["Lyric"].apply(lambda lyric: lyric.lower())
 
 
-
-
-
-    # remove brackets/parenthesis/braces
-    df["Lyric"] = df["Lyric"].str.replace('\[.*\]', '')
-    df["Lyric"] = df["Lyric"].str.replace('\(.*\)', '')
-    df["Lyric"] = df["Lyric"].str.replace('\{.*\}', '')
-    df["Artist"] = df["Artist"].str.replace('\(.*\)', '')
-
-    # Remove incurable data (open parantheses)
-    df = df[~df["Lyric"].str.contains("\[|\]|\(|\)|\{|\}")]
-
-
-    # Remove written by
-    df = df[~df["Lyric"].str.contains("written by")]
-    # df["Lyric"] = df["Lyric"].str.replace(r'written by.*(?=\.\.)\.\.', '')
-
-    # Remove punctuations
-    df["Lyric"] = df["Lyric"].str.replace('[^\w\s]|_', '')
-
-    # Remove phrases with numbers
-    df['Lyric'] = df['Lyric'].str.replace('\w*\d\w*', '')
-
-    # Remove empty records
-    print(df.shape)
-    df = df[df["Lyric"].str.contains("[a-zA-Z]")]
-    print(df.shape)
+#     # stopwords
+#     # ---------
+#     import nltk
+#     from nltk.corpus import stopwords
+#
+#     nltk.download('stopwords')
+#     stop = stopwords.words('english')
+#
+#
+#     df['stopwords'] = df["Lyric"].apply(lambda x: len([x for x in x.split() if x in stop]))
+#     print(df[['Lyric','stopwords']].head())
 
 
 
