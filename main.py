@@ -2,10 +2,12 @@ import pandas as pd
 import numpy as np
 import sys
 
+
 def main():
     flags = {
         "verbose": True if "-v" in sys.argv else False
     }
+    records_numb = 10000 if '--full' in sys.argv else 100
 
     # ----------------------------- #
     #        Data importing         #
@@ -15,16 +17,16 @@ def main():
     loader = Loader(flags)
     loader.read_csv("dataset.zip", cols=["artist", "song", "seq"])
     loader.convert_cols_to_dtype(["artist", "song", "seq"], "string")
-    df = loader.get_df().iloc[:10000,:].copy()
+    df = loader.get_df().iloc[:records_numb, :].copy()
 
     # ----------------------------- #
     #       Lyrics processing       #
     # ----------------------------- #
 
-#
+    #
     from normalizer import Normalizer
     normalizer = Normalizer(flags)
-#
+    #
     # normalizer.drop_duplicates(df)
     # normalizer.drop_nans(df)
     normalizer.lowercase(df)
@@ -38,7 +40,6 @@ def main():
     normalizer.remove_rare_words(df)
     normalizer.stem(df)
     normalizer.tokenize(df)
-
 
     print("- Saving processed data")
     df.to_csv("./checkpoint4.csv")

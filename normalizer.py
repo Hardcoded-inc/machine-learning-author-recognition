@@ -80,15 +80,13 @@ class Normalizer:
 
     def remove_stop_words(self, df, col="seq"):
         self.drop_nans(df)
-        if self.verbose :
-            print(f"- Removing stopwords.")
+        self.print_current_step(f"- Removing stopwords.")
 
         df[col] = df[col].apply(lambda x: " ".join(x for x in x.split() if x not in stop))
 
 
     def remove_common_words(self, df, col="seq"):
-        if self.verbose :
-            print(f"- Removing common words.")
+        self.print_current_step(f"- Removing common words.")
 
         freq = pd.Series(' '.join(df[col]).split()).value_counts()
         freq = freq[freq > 6000]
@@ -98,8 +96,7 @@ class Normalizer:
 
 
     def remove_rare_words(self, df, col="seq"):
-        if self.verbose :
-            print(f"- Removing rare words.")
+        self.print_current_step(f"- Removing rare words.")
 
         freq = pd.Series(' '.join(df[col]).split()).value_counts()
         freq = freq[freq < 3]
@@ -109,14 +106,16 @@ class Normalizer:
 
 
     def tokenize(self, df, col="seq"):
-        if self.verbose :
-            print(f"- Tokenizing lyrics.")
+        self.print_current_step(f"- Tokenizing lyrics.")
 
         df[col] = df[col].apply(lambda x: str(TextBlob(x).words))
 
     def stem(self, df, col="seq"):
-        if self.verbose :
-            print(f"- Stemming lyrics.")
+        self.print_current_step(f"- Stemming lyrics.")
 
         st = PorterStemmer()
         df[col] = df[col].apply(lambda x: " ".join(st.stem(word) for word in x.split()))
+
+    def print_current_step(self, message):
+        if self.verbose:
+            print(message)
