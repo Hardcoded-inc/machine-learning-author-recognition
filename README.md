@@ -1,10 +1,12 @@
 # Author Rezognition ML project
 
 ### Data processing
+
 ```bash
- $ python main.py [-v] [--full]
+ $ python process_data.py [-v] [--full]
 ```
-You can set target file inside main.py
+
+You can set target file inside process_data.py
 
 flags:
 -v: Verbose mode
@@ -13,7 +15,9 @@ flags:
 ---
 
 ### Model training
+
 ```bash
  $ python train.py
 ```
+
 You can set data source file inside train.py
