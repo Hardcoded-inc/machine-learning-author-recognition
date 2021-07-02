@@ -1,20 +1,18 @@
-# MLGenreRecogniton
+# Author Rezognition ML project
 
-Steps to data preparing:
+### Data processing
+```bash
+ $ python main.py [-v] [--full]
+```
+You can set target file inside main.py
 
-✅ zmiana wielkości liter
-🟡 Usunąc wszystkie frazy "writen by ... \.\." - przed interpunkcja
-✅ usuwanie znaków interpunkcyjnych ("")
-➤ usuwanie słów ze “stop-listy”
-➤ usuwanie często występujących słów
-➤ usuwanie rzadko występujących słów
-➤ tokenizacja
-➤ stemming
-➤ lematyzacja
+flags:
+-v: Verbose mode
+--full: Run with 10k records instead of 100
 
-➤ Usunac tabulatury (gitara)
-➤ Usunac akordy
-➤ Wywalic entery
-✅ przypiski w nawiasach [], (), {}
 
-➤ Usunac wszlkie "intro", "chorus", wszystko co ma liczby
+### Model training
+```bash
+ $ python train.py
+```
+You can set data source file inside train.py
