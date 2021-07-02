@@ -10,6 +10,9 @@ flags:
 -v: Verbose mode
 --full: Run with 10k records instead of 100
 
+  
+  
+   
 
 ### Model training
 ```bash
