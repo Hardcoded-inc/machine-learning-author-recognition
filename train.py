@@ -6,7 +6,7 @@ import warnings
 
 
 def run():
-    trainer = Trainer("checkpoint4.csv", ["seq", "artist"])
+    trainer = Trainer("checkpoint9.csv", ["seq", "artist"])
 
     trainer.train(naive_bayes.MultinomialNB(), Trainer.COUNT_VECTORS)
 

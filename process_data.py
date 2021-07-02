@@ -41,8 +41,9 @@ def main():
     normalizer.stem(df)
     normalizer.tokenize(df)
 
-    print("- Saving processed data")
-    df.to_csv("./checkpoint4.csv")
+    if flags["verbose"]:
+        print("- Saving processed data")
+    df.to_csv("./checkpoint9.csv")
 
 
 if __name__ == "__main__":
